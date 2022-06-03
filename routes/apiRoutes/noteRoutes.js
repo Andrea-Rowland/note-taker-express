@@ -1,42 +1,51 @@
 const router = require('express').Router();
 const { createNewNote } = require('../../lib/notes');
-const { notes } = require('../../db/db.json');
+const notes = require('../../db/db.json');
+const { v4: uuidv4 } = require('uuid');
+const fs = require('fs');
+const path= require('path');
 
 router.get('/notes', (req, res) => {
     let results = notes;
-    console.log(req.query)
     res.json(results);
 });
 
 router.post('/notes', (req, res) => {
+  let results = notes;
     // set id based on what the next index of the array will be
-    req.body.id = notes.length.toString();
+    let {title, text} = req.body;
+
+    let newNote = {title, text, id: uuidv4()}
+
+    results.push(newNote);
 
     //add note to json file and notes array in this function
-    const note = createNewNote(req.body, notes);
+    const write = fs.writeFileSync(
+      path.join(__dirname, '../../db/db.json'),
+      JSON.stringify(results)
+  );
 
-    res.json(req.body);
+    res.json(write);
 
 });
 
-router.delete('/:id', (req, res) => {
-    Note.destroy({
-      where: {
-        id: req.params.id
-      }
-    })
-      .then(dbDbJson => {
-        if (!dbDbJson) {
-          res.status(404).json({ message: 'No note found with this id' });
-          return;
-        }
-        res.json(dbDbJson);
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(500).json(err);
-      });
-  });
+// router.delete('/notes/:id', (req, res) => {
+//   //fs read file instead!
+//   fs.readFile('../../db/db.json', (err, data) => {
+//     console.log(data);
+//  })
+//   // let results = notes;
+
+//   const newArr = results.filter(deleteNote => deleteNote.id !== req.params.id);
+
+//   const write = fs.writeFileSync(
+//     path.join(__dirname, '../../db/db.json'),
+//     JSON.stringify(newArr)
+// );
+
+//   res.json(write);
+   
+//   });
 
 
 module.exports = router;
