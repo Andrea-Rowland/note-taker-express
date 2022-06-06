@@ -10,7 +10,10 @@ This application is designed to help the user keep track of tasks that need to b
 *Node
 *Express
 
-## Web Link
+## Installation
+To install this you have to clone the files from github to your machine and run npm install then run npm start or you can just go to the live link listed in this ReadMe.
+
+## Live Link
 https://andrea-rowland.github.io/note-taker-express/
 
 ## Screenshot:
